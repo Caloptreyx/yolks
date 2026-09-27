@@ -42,6 +42,10 @@ The GitHub Actions workflows push to `ghcr.io/caloptreyx`. New packages on GHCR 
 
 Downloads during the build (rcon-cli, bercon, GE-Proton) are pinned and checked against checksums.
 
+## Support
+
+Need help or want to request a feature? Join the [Caloptreyx Discord](https://discord.gg/4qjMWU7S8x).
+
 ## License
 
 MIT, see [LICENSE](LICENSE). Parts are derived from [pterodactyl/yolks](https://github.com/pterodactyl/yolks) and [Ptero-Eggs/yolks](https://github.com/Ptero-Eggs/yolks).
