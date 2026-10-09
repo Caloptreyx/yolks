@@ -1,8 +1,8 @@
-name: build steamcmd
+name: build java
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 4 * * 1"
+    - cron: "0 6 * * 1"
   push:
     branches:
       - main
@@ -23,9 +23,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag:
-          - debian
-          - proton
+        include:
+          - { tag: "8", java: "8", file: ./java/Dockerfile }
+          - { tag: "11", java: "11", file: ./java/Dockerfile }
+          - { tag: "17", java: "17", file: ./java/Dockerfile }
+          - { tag: "21", java: "21", file: ./java/Dockerfile }
+          - { tag: "25", java: "25", file: ./java/Dockerfile }
+          - { tag: graalvm, java: "25", file: ./java/graalvm/Dockerfile }
     steps:
       - uses: actions/checkout@v5
       - uses: docker/setup-buildx-action@v3
@@ -38,7 +42,8 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: ./java
-          file: ./java/${{ matrix.tag }}/Dockerfile
+          file: ${{ matrix.file }}
+          build-args: JAVA_VERSION=${{ matrix.java }}
           platforms: linux/amd64
           pull: true
           push: ${{ github.event_name != 'pull_request' }}

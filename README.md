@@ -9,6 +9,8 @@ Docker images for the [Caloptreyx game eggs](https://github.com/Caloptreyx/game-
 | `ghcr.io/caloptreyx/steamcmd:proton` | Windows game servers through GE-Proton (ARK: Survival Ascended) | Debian 13 |
 | `ghcr.io/caloptreyx/games:rust` | Rust, with WebRCON console and Oxide/Carbon | Debian 13, Node.js 24 LTS |
 | `ghcr.io/caloptreyx/games:dayz` | DayZ, with Workshop mod updates | Debian 13 |
+| `ghcr.io/caloptreyx/java:8`, `:11`, `:17`, `:21`, `:25` | Minecraft: Java Edition, Mindustry and other Java servers | Debian 13, Eclipse Temurin JRE |
+| `ghcr.io/caloptreyx/java:graalvm` | Java servers that want GraalVM | Debian 13, Oracle GraalVM JDK 25 |
 
 ## steamcmd
 
@@ -36,9 +38,13 @@ Updates the server and the selected framework (`FRAMEWORK`: `vanilla`, `oxide` o
 
 Updates the server and `@workshopID` mods on start and runs DayZ with a user name for any container UID. See the entrypoint header for the variables.
 
+## java
+
+Eclipse Temurin JRE on Debian 13, one tag per Java version, built from `java/Dockerfile`. `java:graalvm` is Oracle GraalVM JDK 25 (`java/graalvm/Dockerfile`, version pinned in `GRAAL_VERSION`). Both use `/entrypoint.sh`, which prints the Java version and runs the panel's startup command through `eval`, with `{{VAR}}` replaced by `${VAR}`.
+
 ## Publishing
 
-The GitHub Actions workflows push to `ghcr.io/caloptreyx`. New packages on GHCR are private: after the first build, set each package (`installers`, `steamcmd`, `games`) to **Public** in its package settings so Wings can pull it without credentials.
+The GitHub Actions workflows push to `ghcr.io/caloptreyx`. New packages on GHCR are private: after the first build, set each package (`installers`, `steamcmd`, `games`, `java`) to **Public** in its package settings so Wings can pull it without credentials.
 
 Downloads during the build (rcon-cli, bercon, GE-Proton) are pinned and checked against checksums.
 
