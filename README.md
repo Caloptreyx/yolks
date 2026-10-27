@@ -9,6 +9,7 @@ Docker images for the [Caloptreyx game eggs](https://github.com/Caloptreyx/game-
 | `ghcr.io/caloptreyx/steamcmd:proton` | Windows game servers through GE-Proton (ARK: Survival Ascended) | Debian 13 |
 | `ghcr.io/caloptreyx/games:rust` | Rust, with WebRCON console and Oxide/Carbon | Debian 13, Node.js 24 LTS |
 | `ghcr.io/caloptreyx/games:dayz` | DayZ, with Workshop mod updates | Debian 13 |
+| `ghcr.io/caloptreyx/games:arma3` | Arma 3, with Workshop mod updates and Headless Clients | Debian 13 |
 | `ghcr.io/caloptreyx/java:8`, `:11`, `:17`, `:21`, `:25` | Minecraft: Java Edition, Mindustry and other Java servers | Debian 13, Eclipse Temurin JRE |
 | `ghcr.io/caloptreyx/java:graalvm` | Java servers that want GraalVM | Debian 13, Oracle GraalVM JDK 25 |
 
@@ -37,6 +38,10 @@ Updates the server and the selected framework (`FRAMEWORK`: `vanilla`, `oxide` o
 ## games:dayz
 
 Updates the server and `@workshopID` mods on start and runs DayZ with a user name for any container UID. See the entrypoint header for the variables.
+
+## games:arma3
+
+Updates the server (any branch, e.g. `creatordlc`) and `@workshopID` mods on start, installs mod keys, starts up to 5 Headless Clients and runs Arma 3 with a user name for any container UID. Mod update checks use the Steam Workshop API in one request; mods are hard-link copies of SteamCMD's downloads, renamed to lowercase, so updates only download what changed. See the entrypoint header for the variables.
 
 ## java
 
