@@ -69,7 +69,7 @@ if [[ "${AUTO_UPDATE:-1}" != "0" || "${installed_tag}" != "${tag}" ]]; then
 
         log "Downloading Horizon ${name}..."
         download "${url}" "${WORK}/${ASSET}" "${digest#sha256:}" sha256sum \
-            || fail "Could not download Horizon ${name} (download failed or checksum mismatch)."
+            || fail "Could not download Horizon ${name} (download failed or checksum mismatch; Horizon replaces the Nightly's files while it publishes a new one, so try again in a few minutes)."
         mkdir -p "${WORK}/release"
         tar -xzf "${WORK}/${ASSET}" -C "${WORK}/release" || fail "Could not extract ${ASSET}."
         source_dir=$(dirname "$(find "${WORK}/release" -name horizon-server -type f | head -n 1)")
