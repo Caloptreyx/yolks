@@ -11,6 +11,7 @@ Docker images for the [Caloptreyx game eggs](https://github.com/Caloptreyx/game-
 | `ghcr.io/caloptreyx/games:dayz` | DayZ, with Workshop mod updates | Debian 13 |
 | `ghcr.io/caloptreyx/games:arma3` | Arma 3, with Workshop mod updates and Headless Clients | Debian 13 |
 | `ghcr.io/caloptreyx/games:horizon` | Horizon (Minecraft: Java Edition 26.3), installed and updated on start | `java:25` |
+| `ghcr.io/caloptreyx/games:pathoftitans` | Path of Titans, updated on start, with an RCON console | `steamcmd:debian` |
 | `ghcr.io/caloptreyx/java:8`, `:11`, `:17`, `:21`, `:25` | Minecraft: Java Edition, Mindustry and other Java servers | Debian 13, Eclipse Temurin JRE |
 | `ghcr.io/caloptreyx/java:graalvm` | Java servers that want GraalVM | Debian 13, Oracle GraalVM JDK 25 |
 
@@ -47,6 +48,10 @@ Updates the server (any branch, e.g. `creatordlc`) and `@workshopID` mods on sta
 ## games:horizon
 
 Built on `java:25`. Installs or updates Horizon's `horizon-server` on start (`horizon-update`: `HORIZON_VERSION`, `AUTO_UPDATE`) and prepares its game files from Mojang's Minecraft client and server with the image's Java (`PREPARE_GAME_FILES`), one exporter at a time so it fits in 1 GB. Then writes the panel's settings into `server.toml` with `horizon-server config set` and adds the listed players. See the entrypoint header for the variables. `java:25` must be built first: this image pulls it from GHCR.
+
+## games:pathoftitans
+
+Built on `steamcmd:debian`. Updates Path of Titans on start with Alderon's AlderonGamesCmd (`AG_AUTH_TOKEN`, `BETA_BRANCH`, `AUTO_UPDATE`), generates the server GUID once and a random RCON password per start when they are empty, and sends each console line to the server over Source RCON with `rcon`, since the server reads no console input. The server runs in the foreground, so the panel's SIGINT reaches it directly. AlderonGamesCmd has no versioned download: it is pinned by checksum in the Dockerfile (`ALDERON_CMD_SHA256`), and the build fails when Alderon replaces it. `steamcmd:debian` must be built first: this image pulls it from GHCR.
 
 ## java
 
