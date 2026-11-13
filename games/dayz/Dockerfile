@@ -9,8 +9,9 @@ LABEL       org.opencontainers.image.licenses=MIT
 ENV         DEBIAN_FRONTEND=noninteractive
 SHELL       ["/bin/bash", "-o", "pipefail", "-c"]
 
-ARG         BERCON_VERSION=1.0.0
-ARG         BERCON_SHA256=a743bd964e097409be1074e44d6d62fc7382479db83278c86fc9a3a6514d1186
+# BattlEye RCon client for owners (`bercon`); the project moved its CLI to WoozyMasta/bercon-cli.
+ARG         BERCON_VERSION=v0.5.0
+ARG         BERCON_SHA256=35677b3965c5b1dd7250102748b5a8a10047b33aefaab6205bbdebbf21905f4a
 
 # libssl-dev provides the unversioned libssl.so the server loads.
 RUN         dpkg --add-architecture i386 \
@@ -20,7 +21,7 @@ RUN         dpkg --add-architecture i386 \
                 libssl-dev lib32gcc-s1 libsdl2-2.0-0 libsdl2-2.0-0:i386 \
                 libstdc++6 libstdc++6:i386 lib32stdc++6 libcap2 libnss-wrapper \
             && rm -rf /var/lib/apt/lists/* \
-            && curl -fsSL -o /usr/local/bin/bercon "https://github.com/WoozyMasta/bercon/releases/download/${BERCON_VERSION}/bercon" \
+            && curl -fsSL -o /usr/local/bin/bercon "https://github.com/WoozyMasta/bercon-cli/releases/download/${BERCON_VERSION}/bercon-cli-linux-amd64" \
             && echo "${BERCON_SHA256}  /usr/local/bin/bercon" | sha256sum -c - \
             && chmod 0755 /usr/local/bin/bercon \
             && sed -i 's/^# *en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen && locale-gen \

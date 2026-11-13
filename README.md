@@ -5,11 +5,14 @@ Docker images for the [Caloptreyx game eggs](https://github.com/Caloptreyx/game-
 | Image | Used for | Base |
 |-------|----------|------|
 | `ghcr.io/caloptreyx/installers:debian` | Egg install scripts | Debian 13 |
-| `ghcr.io/caloptreyx/steamcmd:debian` | Linux game servers updated through SteamCMD (7 Days to Die, Palworld) | Debian 13 |
-| `ghcr.io/caloptreyx/steamcmd:proton` | Windows game servers through GE-Proton (ARK: Survival Ascended) | Debian 13 |
+| `ghcr.io/caloptreyx/steamcmd:debian` | Linux game servers updated through SteamCMD (7 Days to Die, Palworld, ARK: Survival Evolved, American Truck Simulator, Euro Truck Simulator 2, Arma Reforger, Conan Exiles, Garry's Mod, Soulmask, Valheim, Unturned, Don't Starve Together, Project Zomboid, Satisfactory), plus Factorio and BeamMP | Debian 13 |
+| `ghcr.io/caloptreyx/steamcmd:proton` | Windows game servers through GE-Proton (ARK: Survival Ascended, Windrose, Astroneer, Enshrouded, Icarus, SCUM) | Debian 13 |
 | `ghcr.io/caloptreyx/games:rust` | Rust, with WebRCON console and Oxide/Carbon | Debian 13, Node.js 24 LTS |
 | `ghcr.io/caloptreyx/games:dayz` | DayZ, with Workshop mod updates | Debian 13 |
 | `ghcr.io/caloptreyx/games:arma3` | Arma 3, with Workshop mod updates and Headless Clients | Debian 13 |
+| `ghcr.io/caloptreyx/games:bedrock` | Minecraft Bedrock Dedicated Server, updated on start | Debian 13 |
+| `ghcr.io/caloptreyx/games:corekeeper` | Core Keeper, with the Xvfb display it needs | `steamcmd:debian` |
+| `ghcr.io/caloptreyx/games:hytale` | Hytale, downloaded and updated on start | `java:25` |
 | `ghcr.io/caloptreyx/games:horizon` | Horizon (Minecraft: Java Edition 26.3), installed and updated on start | `java:25` |
 | `ghcr.io/caloptreyx/games:pathoftitans` | Path of Titans, updated on start, with an RCON console | `steamcmd:debian` |
 | `ghcr.io/caloptreyx/java:8`, `:11`, `:17`, `:21`, `:25` | Minecraft: Java Edition, Mindustry and other Java servers | Debian 13, Eclipse Temurin JRE |
@@ -45,6 +48,18 @@ Updates the server and `@workshopID` mods on start and runs DayZ with a user nam
 
 Updates the server (any branch, e.g. `creatordlc`) and `@workshopID` mods on start, installs mod keys, starts up to 5 Headless Clients and runs Arma 3 with a user name for any container UID. Mod update checks use the Steam Workshop API in one request; mods are hard-link copies of SteamCMD's downloads, renamed to lowercase, so updates only download what changed. See the entrypoint header for the variables.
 
+## games:bedrock
+
+Updates the Bedrock Dedicated Server on start (`AUTO_UPDATE`, default `1`) to `BEDROCK_VERSION`: `latest` (default), `preview` or a fixed version such as `1.21.50.10`. The installed version is kept in `.bedrock-version`, so nothing is downloaded when it is current. `server.properties`, `permissions.json`, `allowlist.json` and worlds are kept. The updater is also available as `bedrock-update`.
+
+## games:corekeeper
+
+`steamcmd:debian` plus Xvfb. The Core Keeper server needs a (virtual) display; keeping Xvfb in its own image avoids adding about 300 MB to `steamcmd:debian`. The egg starts Xvfb itself.
+
+## games:hytale
+
+Built on `java:25`. The Hytale game files need a Hytale account, so they are downloaded on start with the official downloader installed by the egg: on the first start the console shows a login URL and code. The downloader keeps its credentials in `.hytale-downloader-credentials.json`, so later updates need no login. `AUTO_UPDATE` (default `1`) and `HYTALE_PATCHLINE` (`release` or `pre-release`) control updates; the installed version is kept in `.hytale-version`.
+
 ## games:horizon
 
 Built on `java:25`. Installs or updates Horizon's `horizon-server` on start (`horizon-update`: `HORIZON_VERSION`, `AUTO_UPDATE`) and prepares its game files from Mojang's Minecraft client and server with the image's Java (`PREPARE_GAME_FILES`), one exporter at a time so it fits in 1 GB. Then writes the panel's settings into `server.toml` with `horizon-server config set` and adds the listed players. See the entrypoint header for the variables. `java:25` must be built first: this image pulls it from GHCR.
@@ -60,6 +75,8 @@ Eclipse Temurin JRE on Debian 13, one tag per Java version, built from `java/Doc
 ## Publishing
 
 The GitHub Actions workflows push to `ghcr.io/caloptreyx`. New packages on GHCR are private: after the first build, set each package (`installers`, `steamcmd`, `games`, `java`) to **Public** in its package settings so Wings can pull it without credentials.
+
+`games:corekeeper` is built `FROM steamcmd:debian` and `games:hytale` `FROM java:25`, pulled from GHCR during the build. After changing `steamcmd/debian` or `java`, let those workflows finish before rebuilding the games images, or trigger `build games` manually afterwards.
 
 Downloads during the build (rcon-cli, bercon, GE-Proton) are pinned and checked against checksums.
 

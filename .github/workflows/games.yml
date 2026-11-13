@@ -27,6 +27,9 @@ jobs:
           - rust
           - dayz
           - arma3
+          - bedrock
+          - corekeeper
+          - hytale
           - horizon
           - pathoftitans
     steps:
