@@ -25,6 +25,12 @@ COPY        --from=jre /opt/java/openjdk /opt/java/openjdk
 ENV         JAVA_HOME=/opt/java/openjdk
 ENV         PATH=/opt/java/openjdk/bin:$PATH
 
+# CVE-2026-114938 ("Java4Shell"): the AVX-512 Base64 decoder of JDK 17 and later can write past
+# its output buffer. Turning the Base64 intrinsics off closes it until the patched JDK is in the
+# image, whatever flags the startup command passes. The java launcher of JDK 9+ reads
+# JDK_JAVA_OPTIONS; Java 8 ignores it (it lacks the flag, and the bug).
+ENV         JDK_JAVA_OPTIONS=-XX:-UseBASE64Intrinsics
+
 ENV         LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 USER        container
 ENV         USER=container HOME=/home/container

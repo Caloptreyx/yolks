@@ -72,6 +72,8 @@ Built on `steamcmd:debian`. Updates Path of Titans on start with Alderon's Alder
 
 Eclipse Temurin JRE on Debian 13, one tag per Java version, built from `java/Dockerfile`. `java:graalvm` is Oracle GraalVM JDK 25 (`java/graalvm/Dockerfile`, version pinned in `GRAAL_VERSION`). Both use `/entrypoint.sh`, which prints the Java version and runs the panel's startup command through `eval`, with `{{VAR}}` replaced by `${VAR}`.
 
+All tags set `JDK_JAVA_OPTIONS=-XX:-UseBASE64Intrinsics`, which the `java` launcher adds to every start, custom startup flags included. It mitigates CVE-2026-114938 ("Java4Shell") in Java 17 and later; Java 8 ignores the variable.
+
 ## Publishing
 
 The GitHub Actions workflows push to `ghcr.io/caloptreyx`. New packages on GHCR are private: after the first build, set each package (`installers`, `steamcmd`, `games`, `java`) to **Public** in its package settings so Wings can pull it without credentials.

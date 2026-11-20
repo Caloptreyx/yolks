@@ -27,6 +27,9 @@ RUN apt-get update -y \
 ENV JAVA_HOME=/opt/java/graalvm \
     PATH="/opt/java/graalvm/bin:$PATH"
 
+# CVE-2026-114938 ("Java4Shell"), see ../Dockerfile. No fixed GraalVM JDK 25 is out yet.
+ENV JDK_JAVA_OPTIONS=-XX:-UseBASE64Intrinsics
+
 
 RUN useradd -d /home/container -m container
 USER        container
