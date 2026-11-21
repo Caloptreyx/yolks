@@ -16,6 +16,7 @@ Docker images for the [Caloptreyx game eggs](https://github.com/Caloptreyx/game-
 | `ghcr.io/caloptreyx/games:horizon` | Horizon (Minecraft: Java Edition 26.3), installed and updated on start | `java:25` |
 | `ghcr.io/caloptreyx/games:pathoftitans` | Path of Titans, updated on start, with an RCON console | `steamcmd:debian` |
 | `ghcr.io/caloptreyx/games:luanti` | Luanti (Minetest) headless server, built from the tagged release | `steamcmd:debian` |
+| `ghcr.io/caloptreyx/games:zandronum` | Zandronum (multiplayer Doom): the libraries the official server build links against | `steamcmd:debian` |
 | `ghcr.io/caloptreyx/java:8`, `:11`, `:17`, `:21`, `:25` | Minecraft: Java Edition, Mindustry and other Java servers | Debian 13, Eclipse Temurin JRE |
 | `ghcr.io/caloptreyx/java:graalvm` | Java servers that want GraalVM | Debian 13, Oracle GraalVM JDK 25 |
 
@@ -72,6 +73,10 @@ Built on `steamcmd:debian`. Updates Path of Titans on start with Alderon's Alder
 ## games:luanti
 
 Built on `steamcmd:debian`. Contains the headless `luantiserver` (Luanti, formerly Minetest), compiled from the release tag in `LUANTI_VERSION` (Debian 13 only packages an older version) without the client, PostgreSQL, LevelDB, Redis and Prometheus support; worlds use SQLite. Engine data is in `/opt/luanti/share/luanti`; games, mods and worlds go in the server files (`LUANTI_USER_PATH`). Update `LUANTI_VERSION` to ship a new engine release. `steamcmd:debian` must be built first: this image pulls it from GHCR.
+
+## games:zandronum
+
+Built on `steamcmd:debian`. Adds the libraries the official Linux build of `zandronum-server` is linked against although the server never opens a window: SDL 1.2 (Debian's `libsdl1.2-compat`) and libjpeg 8 (`libjpeg.so.8` from Ubuntu 24.04's `libjpeg-turbo8`, since Debian only ships libjpeg 6.2). The server binary and the WADs are installed into the server files by the egg. `steamcmd:debian` must be built first: this image pulls it from GHCR.
 
 ## java
 
