@@ -32,6 +32,7 @@ jobs:
           - hytale
           - horizon
           - pathoftitans
+          - luanti
     steps:
       - uses: actions/checkout@v5
       - uses: docker/setup-buildx-action@v3
